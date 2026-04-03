@@ -13,6 +13,7 @@ export class Preloader extends EventEmitter {
 
     this.preloaders = document.querySelectorAll(".preloader");
     this.progressBars = document.querySelectorAll(".preloader__progress-bar");
+    this.slider = document.getElementById("compare-slider__line");
 
     this.resources.on("progress", (value) => {
       this.onLoad(value);
@@ -37,6 +38,16 @@ export class Preloader extends EventEmitter {
       overwrite: true,
       onComplete: () => {
         this.preloaders.forEach((p) => p.remove());
+      },
+    });
+
+    gsap.to(this.slider, {
+      opacity: 0,
+      duration: 0.5,
+      delay: 1,
+      overwrite: true,
+      onComplete: () => {
+        this.slider.remove();
       },
     });
   }
