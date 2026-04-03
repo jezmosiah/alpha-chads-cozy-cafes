@@ -25,6 +25,8 @@ body {
 ================================ */
 #ui-chad {
   /* Day */
+  clip-path: inset(0 calc(100% - var(--slider-x)) 0 0);
+
   --color-modal-bg: #000000;
   --color-modal-text: #ffffff;
   --color-preloader-bg: #282828;
@@ -54,6 +56,8 @@ body.night-theme #ui-chad {
 }
 
 body.night-theme #ui-capybara {
+  clip-path: inset(0 0 0 var(--slider-x));
+
   /* Night */
   --color-modal-bg: #0d1b2a;
   --color-modal-text: #a0b4d6;
@@ -86,14 +90,6 @@ body.night-theme {
 .ui-panel button,
 .ui-panel .modal {
   pointer-events: all;
-}
-
-#ui-chad {
-  clip-path: inset(0 calc(100% - var(--slider-x)) 0 0);
-}
-
-#ui-capybara {
-  clip-path: inset(0 0 0 var(--slider-x));
 }
 
 /* Modals */
