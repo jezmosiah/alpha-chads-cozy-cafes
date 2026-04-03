@@ -1,0 +1,18 @@
+import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
+import { DRACOLoader } from "three/examples/jsm/loaders/DRACOLoader.js";
+
+import * as THREE from "three/webgpu";
+
+export class Loaders {
+  constructor() {
+    this.init();
+  }
+
+  init() {
+    this.loaders = {};
+    this.loaders.gltfLoader = new GLTFLoader();
+    this.loaders.dracoLoader = new DRACOLoader();
+    this.loaders.dracoLoader.setDecoderPath("/draco/");
+    this.loaders.gltfLoader.setDRACOLoader(this.loaders.dracoLoader);
+  }
+}
