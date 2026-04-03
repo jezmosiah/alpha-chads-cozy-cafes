@@ -47,7 +47,8 @@ body.night-theme #ui-chad {
    THEME VARIABLES - CAPYBARA
 ================================ */
 #ui-capybara {
-  /* Day */
+  clip-path: inset(0 0 0 var(--slider-x));
+
   --color-modal-bg: #ffffff;
   --color-modal-text: #000000;
   --color-preloader-bg: #f7bf76;
@@ -56,8 +57,6 @@ body.night-theme #ui-chad {
 }
 
 body.night-theme #ui-capybara {
-  clip-path: inset(0 0 0 var(--slider-x));
-
   /* Night */
   --color-modal-bg: #0d1b2a;
   --color-modal-text: #a0b4d6;
