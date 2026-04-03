@@ -20,23 +20,46 @@ body {
   height: 100%;
 }
 
+/* UI */
+.ui-panel {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 1000000;
+}
+
+.ui-panel button,
+.ui-panel .modal {
+  pointer-events: all;
+}
+
+#ui-chad {
+  clip-path: inset(0 calc(100% - var(--slider-x)) 0 0);
+}
+
+#ui-capybara {
+  clip-path: inset(0 0 0 var(--slider-x));
+}
+
 /* Modals */
 .modal {
-  position: fixed;
+  position: absolute;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
   width: 300px;
   height: 200px;
-  z-index: 10;
+  z-index: 10000001;
   background-color: black;
   color: white;
   opacity: 0;
   pointer-events: none;
+  visibility: hidden;
 }
 
 .modal-open {
   pointer-events: auto;
+  visibility: visible;
 }
 
 .modal__wrapper {
@@ -64,6 +87,49 @@ body {
 
 .modal__close-button:hover {
   cursor: pointer;
+}
+
+/* Slider */
+#compare-slider {
+  position: fixed;
+  top: 0;
+  left: 50%;
+  width: 40px;
+  height: 100%;
+  transform: translateX(-50%);
+  cursor: ew-resize;
+  z-index: 100;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  touch-action: none;
+}
+
+#compare-slider__line {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 2px;
+  height: 100%;
+  background: white;
+  pointer-events: none;
+}
+
+#compare-slider__handle {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background: white;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  pointer-events: none;
+  user-select: none;
 }
 
 /* Preloader */

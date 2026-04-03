@@ -10,6 +10,7 @@ import { Mouse } from "./Mouse";
 import { Raycaster } from "./Raycaster";
 import { Device } from "./Utils/Device";
 import { Preloader } from "./Preloader";
+import { CompareSlider } from "./CompareSlider";
 
 export class Experience {
   static getInstance() {
@@ -27,7 +28,10 @@ export class Experience {
   async init() {
     this.canvasElement = document.getElementById("experience-canvas");
 
-    this.scene = new THREE.Scene();
+    this.isDraggingSlider = false;
+
+    this.sceneA = new THREE.Scene();
+    this.sceneB = new THREE.Scene();
     this.time = new Time();
     this.device = new Device();
     this.sizes = new Sizes();
@@ -38,6 +42,7 @@ export class Experience {
     this.raycaster = new Raycaster();
     await this.renderer.init();
 
+    this.compareSlider = new CompareSlider();
     this.resources = new Resources();
     this.preloader = new Preloader();
     this.world = new World();

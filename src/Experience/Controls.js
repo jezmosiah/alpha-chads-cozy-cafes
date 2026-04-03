@@ -42,12 +42,13 @@ export class Controls {
 
     this.canvas.addEventListener("touchstart", (e) => {
       if (this.experience.raycaster.isModalOpen) return;
-
+      if (this.experience.isDraggingSlider) return;
       this.initialTouchX = e.touches[0].clientX;
     });
 
     this.canvas.addEventListener("touchmove", (e) => {
       if (this.experience.raycaster.isModalOpen) return;
+      if (this.experience.isDraggingSlider) return;
 
       if (this.initialTouchX === null) return;
       const deltaX = this.initialTouchX - e.touches[0].clientX;

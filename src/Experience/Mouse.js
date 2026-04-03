@@ -1,8 +1,5 @@
 import * as THREE from "three/webgpu";
 import { Experience } from "./Experience";
-import { OrbitControls } from "three/examples/jsm/Addons.js";
-
-import normalizeWheel from "normalize-wheel";
 
 export class Mouse {
   constructor() {
@@ -18,11 +15,13 @@ export class Mouse {
       this.instance.y = -(e.clientY / window.innerHeight) * 2 + 1;
     });
     window.addEventListener("touchmove", (e) => {
+      if (this.experience.isDraggingSlider) return;
       const touch = e.touches[0];
       this.instance.x = (touch.clientX / window.innerWidth) * 2 - 1;
       this.instance.y = -(touch.clientY / window.innerHeight) * 2 + 1;
     });
     window.addEventListener("touchstart", (e) => {
+      if (this.experience.isDraggingSlider) return;
       const touch = e.touches[0];
       this.instance.x = (touch.clientX / window.innerWidth) * 2 - 1;
       this.instance.y = -(touch.clientY / window.innerHeight) * 2 + 1;

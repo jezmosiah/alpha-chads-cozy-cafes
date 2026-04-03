@@ -14,8 +14,6 @@ export class ChadCafe {
 
   init() {
     this.initCafe();
-    // this.initPlane();
-    this.initBgOrb();
     this.initEnvironment();
     this.initAnimations();
     // this.initDebug();
@@ -41,38 +39,44 @@ export class ChadCafe {
         }
       }
     });
-    this.experience.scene.add(this.chadcafe);
+    this.experience.sceneA.add(this.chadcafe);
+    console.log("Found raycaster objects:", Object.keys(intersectObjects));
 
-    this.experience.raycaster.populateIntersectObjects([
+    this.experience.raycaster.populateIntersectObjects("A", [
       {
         mesh: intersectObjects["Raycaster_BEAST_MODE_ALPHA_CHAD"],
         type: "scale",
-        scaleFactor: 2,
-      },
-      {
-        mesh: intersectObjects["Raycaster_Cozy_Project_2001"],
-        type: "modal",
-        elementId: "project-one-chad",
+        pairKey: "beast-mode",
       },
       {
         mesh: intersectObjects["Raycaster_Cozy_Project_1001"],
         type: "modal",
+        elementId: "project-one-chad",
+        pairKey: "project-one",
+      },
+      {
+        mesh: intersectObjects["Raycaster_Cozy_Project_2001"],
+        type: "modal",
         elementId: "project-two-chad",
+        pairKey: "project-two",
       },
       {
         mesh: intersectObjects["Raycaster_Instagram_Contact"],
         type: "url",
         url: "https://www.instagram.com/andrewwoan/",
+        pairKey: "instagram",
       },
       {
         mesh: intersectObjects["Raycaster_Twitter_Contact"],
         type: "url",
         url: "https://x.com/andrewwoan",
+        pairKey: "twitter",
       },
       {
         mesh: intersectObjects["Raycaster_YouTube_Contact"],
         type: "url",
         url: "https://youtube.com/@andrewwoan",
+        pairKey: "youtube",
       },
     ]);
   }
@@ -116,7 +120,7 @@ export class ChadCafe {
 
   initEnvironment() {
     this.ambientLight = new THREE.AmbientLight("#fff2f2", 2);
-    this.experience.scene.add(this.ambientLight);
+    this.experience.sceneA.add(this.ambientLight);
 
     this.sunLight = new THREE.DirectionalLight("#ffffff", 2.2);
     this.sunLight.castShadow = true;
@@ -128,11 +132,11 @@ export class ChadCafe {
     this.sunLight.shadow.camera.top = 100;
     this.sunLight.shadow.camera.bottom = -50;
     this.sunLight.position.set(5, 18, -3);
-    this.experience.scene.add(this.sunLight);
-    this.experience.scene.add(this.sunLight.target);
+    this.experience.sceneA.add(this.sunLight);
+    this.experience.sceneA.add(this.sunLight.target);
 
     this.lightHelper = new THREE.DirectionalLightHelper(this.sunLight, 15);
-    // this.experience.scene.add(this.lightHelper);
+    // this.experience.sceneA.add(this.lightHelper);
   }
 
   initDebug() {
@@ -183,30 +187,6 @@ export class ChadCafe {
     ambientFolder
       .add(this.ambientLight, "intensity", 0, 10, 0.01)
       .name("Intensity");
-  }
-
-  initPlane() {
-    const geometry = new THREE.PlaneGeometry(1000, 1000);
-    const material = new THREE.MeshStandardMaterial({
-      color: "#2f2f2f",
-      side: THREE.FrontSide,
-    });
-    const plane = new THREE.Mesh(geometry, material);
-    plane.rotation.set(-Math.PI / 2, 0, 0);
-    plane.receiveShadow = true;
-    plane.castShadow = false;
-    plane.position.set(0, 0.248, 0);
-    this.experience.scene.add(plane);
-  }
-
-  initBgOrb() {
-    const geometry = new THREE.SphereGeometry(500, 32, 16);
-    const material = new THREE.MeshBasicMaterial({
-      color: "#2a2a2a",
-      side: THREE.BackSide,
-    });
-    const sphere = new THREE.Mesh(geometry, material);
-    this.experience.scene.add(sphere);
   }
 
   resize() {}

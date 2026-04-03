@@ -2,34 +2,127 @@ import * as THREE from "three/webgpu";
 import GUI from "lil-gui";
 import { Experience } from "../Experience";
 
+import gsap from "gsap";
+
 export class CapybaraCafe {
   constructor() {
     this.experience = Experience.getInstance();
     this.capybaracafe = this.experience.resources.items.capybaracafe.scene;
+    this.trails = [];
+
     this.init();
   }
 
   init() {
     this.initCafe();
-    // this.initPlane();
     this.initBgOrb();
     this.initEnvironment();
+    this.initAnimations();
     // this.initDebug();
   }
 
   initCafe() {
+    const intersectObjects = {};
     this.capybaracafe.traverse((child) => {
+      if (
+        child.name.includes("Raycaster") &&
+        (child.type === "Group" || child.type === "Object3D")
+      ) {
+        intersectObjects[child.name] = child;
+      }
+
       if (child.isMesh) {
         child.castShadow = true;
         child.receiveShadow = true;
+
+        if (child.name.includes("Trail")) {
+          child.scale.set(0, 0, 0);
+          this.trails.push(child);
+        }
       }
     });
-    this.experience.scene.add(this.capybaracafe);
+    this.experience.sceneB.add(this.capybaracafe);
+    console.log("Found raycaster objects:", Object.keys(intersectObjects));
+
+    this.experience.raycaster.populateIntersectObjects("B", [
+      {
+        mesh: intersectObjects["Raycaster_Capybara"],
+        type: "scale",
+        pairKey: "beast-mode",
+      },
+      {
+        mesh: intersectObjects["Raycaster_Cozy_Project_1002"],
+        type: "modal",
+        elementId: "project-one-capybara",
+        pairKey: "project-one",
+      },
+      {
+        mesh: intersectObjects["Raycaster_Cozy_Project_2002"],
+        type: "modal",
+        elementId: "project-two-capybara",
+        pairKey: "project-two",
+      },
+      {
+        mesh: intersectObjects["Raycaster_Instagram_Contact001"],
+        type: "url",
+        url: "https://www.instagram.com/andrewwoan/",
+        pairKey: "instagram",
+      },
+      {
+        mesh: intersectObjects["Raycaster_Twitter_Contact001"],
+        type: "url",
+        url: "https://x.com/andrewwoan",
+        pairKey: "twitter",
+      },
+      {
+        mesh: intersectObjects["Raycaster_YouTube_Contact001"],
+        type: "url",
+        url: "https://youtube.com/@andrewwoan",
+        pairKey: "youtube",
+      },
+    ]);
+  }
+
+  initAnimations() {
+    this.trailGroups = [
+      {
+        trails: [],
+        threshold: 0.45,
+        hasShown: false,
+      },
+      {
+        trails: [],
+        threshold: 0.4,
+        hasShown: false,
+      },
+      {
+        trails: [],
+        threshold: 0.38,
+        hasShown: false,
+      },
+      {
+        trails: [],
+        threshold: 0.24,
+        hasShown: false,
+      },
+      {
+        trails: [],
+        threshold: 0.12,
+        hasShown: false,
+      },
+    ];
+
+    this.trails.forEach((trail) => {
+      const index = parseInt(trail.name.split("Trail")[1]) - 1;
+      if (this.trailGroups[index]) {
+        this.trailGroups[index].trails.push(trail);
+      }
+    });
   }
 
   initEnvironment() {
     this.ambientLight = new THREE.AmbientLight("#fff2f2", 2);
-    this.experience.scene.add(this.ambientLight);
+    this.experience.sceneB.add(this.ambientLight);
 
     this.sunLight = new THREE.DirectionalLight("#ffffff", 2.2);
     this.sunLight.castShadow = true;
@@ -41,11 +134,11 @@ export class CapybaraCafe {
     this.sunLight.shadow.camera.top = 100;
     this.sunLight.shadow.camera.bottom = -50;
     this.sunLight.position.set(5, 18, -3);
-    this.experience.scene.add(this.sunLight);
-    this.experience.scene.add(this.sunLight.target);
+    this.experience.sceneB.add(this.sunLight);
+    this.experience.sceneB.add(this.sunLight.target);
 
     this.lightHelper = new THREE.DirectionalLightHelper(this.sunLight, 15);
-    this.experience.scene.add(this.lightHelper);
+    this.experience.sceneB.add(this.lightHelper);
   }
 
   initDebug() {
@@ -98,20 +191,6 @@ export class CapybaraCafe {
       .name("Intensity");
   }
 
-  initPlane() {
-    const geometry = new THREE.PlaneGeometry(1000, 1000);
-    const material = new THREE.MeshStandardMaterial({
-      color: "#edbd76",
-      side: THREE.FrontSide,
-    });
-    const plane = new THREE.Mesh(geometry, material);
-    plane.rotation.set(-Math.PI / 2, 0, 0);
-    plane.receiveShadow = true;
-    plane.castShadow = false;
-    plane.position.set(0, 0.248, 0);
-    this.experience.scene.add(plane);
-  }
-
   initBgOrb() {
     const geometry = new THREE.SphereGeometry(500, 32, 16);
     const material = new THREE.MeshBasicMaterial({
@@ -119,12 +198,39 @@ export class CapybaraCafe {
       side: THREE.BackSide,
     });
     const sphere = new THREE.Mesh(geometry, material);
-    this.experience.scene.add(sphere);
+    this.experience.sceneB.add(sphere);
   }
 
   resize() {}
 
-  update() {}
+  update() {
+    for (let i = 0; i < this.trailGroups.length; i++) {
+      const group = this.trailGroups[i];
+      const shouldShow = this.experience.controls.progress <= group.threshold;
+
+      if (shouldShow && !group.hasShown) {
+        group.trails.forEach((trail) => {
+          gsap.to(trail.scale, {
+            x: 1,
+            y: 1,
+            z: 1,
+            duration: 0.4,
+          });
+        });
+        group.hasShown = true;
+      } else if (!shouldShow && group.hasShown) {
+        group.trails.forEach((trail) => {
+          gsap.to(trail.scale, {
+            x: 0,
+            y: 0,
+            z: 0,
+            duration: 0.2,
+          });
+        });
+        group.hasShown = false;
+      }
+    }
+  }
 
   destroy() {
     this.gui.destroy();

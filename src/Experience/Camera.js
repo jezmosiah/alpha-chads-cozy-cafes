@@ -36,7 +36,7 @@ export class Camera {
     this.cameraRig.rotation.y = Math.PI / 2;
 
     this.cameraRig.add(this.instance);
-    this.experience.scene.add(this.cameraRig);
+    this.experience.sceneA.add(this.cameraRig);
   }
 
   setOrbitControls() {
