@@ -116,7 +116,7 @@ export class Renderer {
         ),
       );
 
-    const bendCurve = uvNode.y.mul(float(1.0).sub(uvNode.y)).mul(float(4.0)); // peaks at 1.0 in center
+    const bendCurve = uvNode.y.mul(float(1.0).sub(uvNode.y)).mul(float(4.0));
     const xOffset = waveX
       .mul(influence)
       .mul(this.amplitude)
@@ -144,6 +144,69 @@ export class Renderer {
       line,
     );
 
+    this.aspect = uniform(
+      this.experience.sizes.width / this.experience.sizes.height,
+    );
+
+    const aspectCorrected = vec2(
+      uvNode.x.sub(0.5).mul(this.aspect.max(1.0)),
+      uvNode.y.sub(0.5).mul(float(1.0).div(this.aspect.min(1.0))),
+    );
+    const noiseScale = float(3.0);
+    const n1 = sin(
+      uvNode.x.mul(noiseScale).mul(7.3).add(uvNode.y.mul(5.7)),
+    ).mul(0.5);
+    const n2 = sin(
+      uvNode.y.mul(noiseScale).mul(8.1).sub(uvNode.x.mul(6.4)),
+    ).mul(0.3);
+    const n3 = sin(uvNode.x.add(uvNode.y).mul(noiseScale).mul(4.9)).mul(0.2);
+    const noise = n1.add(n2).add(n3).mul(float(0.12));
+
+    const dist = aspectCorrected.length().add(noise);
+    const maxDist = vec2(this.aspect, float(1.0)).length().mul(0.5);
+    const screenScale = mix(
+      float(0.7),
+      float(1.0),
+      this.aspect.clamp(0.5, 2.0).sub(0.5).div(1.5),
+    );
+    const normDist = dist.div(maxDist).mul(screenScale);
+    const startThresh = mix(
+      float(0.8),
+      float(0.7),
+      this.aspect.clamp(0.5, 2.0).sub(0.5).div(1.5),
+    );
+
+    const vignetteRaw = smoothstep(
+      startThresh,
+      startThresh.add(float(0.2)),
+      normDist,
+    );
+    const vignetteStrength = this.aspect.clamp(0.5, 1.5).sub(0.3).div(1.2);
+    const vignette = vignetteRaw.mul(vignetteStrength);
+
+    const halftoneScale = float(50);
+    const halfUV = vec2(
+      uvNode.x.mul(this.aspect).mul(halftoneScale),
+      uvNode.y.mul(halftoneScale),
+    );
+    const cellCenter = vec2(0.5, 0.5);
+    const cellUV = halfUV.fract();
+
+    const dotDist = cellUV.sub(cellCenter).length();
+
+    const threshold = vignetteRaw.mul(float(0.4));
+    const dot = smoothstep(threshold, threshold.sub(float(0.02)), dotDist);
+
+    const halftoneColor = vec4(0, 0, 0, 1.0);
+    const halftoneAlpha = dot.mul(vignette).mul(float(0.3));
+
+    const withLine = mix(sceneOutput, vec4(0, 0, 0, 1), line);
+    this.compositeMaterial.fragmentNode = mix(
+      withLine,
+      halftoneColor,
+      halftoneAlpha,
+    );
+
     this.compositeQuad = new THREE.Mesh(geometry, this.compositeMaterial);
     this.compositeScene = new THREE.Scene();
     this.compositeScene.add(this.compositeQuad);
@@ -151,6 +214,7 @@ export class Renderer {
 
   resize() {
     const { width, height, pixelRatio } = this.experience.sizes;
+    this.aspect.value = width / height;
 
     this.renderer.setSize(width, height);
     this.renderer.setPixelRatio(pixelRatio);
