@@ -11,8 +11,8 @@ export class Preloader extends EventEmitter {
     this.experience = Experience.getInstance();
     this.resources = this.experience.resources;
 
-    this.preloader = document.querySelector(".preloader");
-    this.progressBar = document.querySelector(".preloader__progress-bar");
+    this.preloaders = document.querySelectorAll(".preloader");
+    this.progressBars = document.querySelectorAll(".preloader__progress-bar");
 
     this.resources.on("progress", (value) => {
       this.onLoad(value);
@@ -24,17 +24,19 @@ export class Preloader extends EventEmitter {
   }
 
   onLoad(value) {
-    this.progressBar.style.width = `${Math.round(value * 100)}%`;
+    this.progressBars.forEach((bar) => {
+      bar.style.width = `${Math.round(value * 100)}%`;
+    });
   }
 
   playOutro() {
-    gsap.to(this.preloader, {
+    gsap.to([...this.preloaders], {
       opacity: 0,
       duration: 0.5,
       delay: 1,
+      overwrite: true,
       onComplete: () => {
-        this.preloader.remove();
-        // this.emit("preloaderfinished");
+        this.preloaders.forEach((p) => p.remove());
       },
     });
   }

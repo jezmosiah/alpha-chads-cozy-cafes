@@ -98,7 +98,7 @@ body {
   height: 100%;
   transform: translateX(-50%);
   cursor: ew-resize;
-  z-index: 100;
+  z-index: 10000001;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -163,4 +163,73 @@ body {
   background: #ead83a;
   border-radius: 50px;
   transition: width 0.3s ease;
+}
+
+.preloader--chad {
+  background: #282828; /* chad's dark vibe */
+}
+
+.preloader--capybara {
+  background: #f7bf76; /* capybara's blue sky */
+}
+
+.preloader__progress-bar--chad {
+  height: 100%;
+  width: 0%;
+  background: #ead83a;
+  border-radius: 50px;
+  transition: width 0.3s ease;
+}
+
+.preloader__progress-bar--capybara {
+  height: 100%;
+  width: 0%;
+  background: #ffffff;
+  border-radius: 50px;
+  transition: width 0.3s ease;
+}
+
+/* Theme Toggle Button  */
+.night-toggle {
+  position: absolute;
+  top: 24px;
+  right: 24px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  pointer-events: all;
+  user-select: none;
+}
+
+.night-toggle__track {
+  width: 52px;
+  height: 28px;
+  background: #f0c040;
+  border-radius: 999px;
+  position: relative;
+  transition: background 0.4s ease;
+}
+
+.night-toggle__track--night {
+  background: #1a2a6c;
+}
+
+.night-toggle__thumb {
+  position: absolute;
+  top: 4px;
+  left: 4px;
+  width: 20px;
+  height: 20px;
+  background: white;
+  border-radius: 50%;
+  transition: transform 0.4s ease;
+}
+
+.night-toggle__thumb--night {
+  transform: translateX(24px);
+}
+
+.night-toggle__icon {
+  font-size: 18px;
 }

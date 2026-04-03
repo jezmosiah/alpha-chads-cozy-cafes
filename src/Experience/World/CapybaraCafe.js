@@ -42,7 +42,6 @@ export class CapybaraCafe {
       }
     });
     this.experience.sceneB.add(this.capybaracafe);
-    console.log("Found raycaster objects:", Object.keys(intersectObjects));
 
     this.experience.raycaster.populateIntersectObjects("B", [
       {

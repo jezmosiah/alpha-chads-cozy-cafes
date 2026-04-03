@@ -40,7 +40,6 @@ export class ChadCafe {
       }
     });
     this.experience.sceneA.add(this.chadcafe);
-    console.log("Found raycaster objects:", Object.keys(intersectObjects));
 
     this.experience.raycaster.populateIntersectObjects("A", [
       {
