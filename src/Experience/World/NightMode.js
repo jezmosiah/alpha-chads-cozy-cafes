@@ -60,8 +60,14 @@ export class NightMode {
   toggle() {
     this.isNight = !this.isNight;
     this.updateUI();
+    this.updateTheme();
     this.updateLighting(this.chadcafe, this.chadConfig);
     this.updateLighting(this.capybaracafe, this.capybaraConfig);
+  }
+
+  updateTheme() {
+    document.body.classList.toggle("night-theme", this.isNight);
+    document.body.classList.toggle("day-theme", !this.isNight);
   }
 
   updateUI() {

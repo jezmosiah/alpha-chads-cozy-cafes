@@ -20,6 +20,61 @@ body {
   height: 100%;
 }
 
+/* ================================
+   THEME VARIABLES - CHAD
+================================ */
+#ui-chad {
+  /* Day */
+  --color-modal-bg: #000000;
+  --color-modal-text: #ffffff;
+  --color-preloader-bg: #282828;
+  --color-progress-bg: #4e4e4e;
+  --color-progress-bar: #ead83a;
+}
+
+body.night-theme #ui-chad {
+  /* Night */
+  --color-modal-bg: #0a0f2e;
+  --color-modal-text: #a0b4d6;
+  --color-preloader-bg: #0a0f2e;
+  --color-progress-bg: #1a2a4a;
+  --color-progress-bar: #4a6fa5;
+}
+
+/* ================================
+   THEME VARIABLES - CAPYBARA
+================================ */
+#ui-capybara {
+  /* Day */
+  --color-modal-bg: #ffffff;
+  --color-modal-text: #000000;
+  --color-preloader-bg: #f7bf76;
+  --color-progress-bg: #e0a855;
+  --color-progress-bar: #ffffff;
+}
+
+body.night-theme #ui-capybara {
+  /* Night */
+  --color-modal-bg: #0d1b2a;
+  --color-modal-text: #a0b4d6;
+  --color-preloader-bg: #0d1b2a;
+  --color-progress-bg: #1a2a4a;
+  --color-progress-bar: #2a4a8c;
+}
+
+/* ================================
+   SLIDER VARIABLES
+================================ */
+:root {
+  --color-slider-line: #ffffff;
+  --color-slider-handle: #ffffff;
+}
+
+body.night-theme {
+  --color-slider-line: #4a6fa5;
+  --color-slider-handle: #1a2a6c;
+}
+
 /* UI */
 .ui-panel {
   position: fixed;
@@ -50,11 +105,14 @@ body {
   width: 300px;
   height: 200px;
   z-index: 10000001;
-  background-color: black;
-  color: white;
+  background-color: var(--color-modal-bg);
+  color: var(--color-modal-text);
   opacity: 0;
   pointer-events: none;
   visibility: hidden;
+  transition:
+    background-color 0.8s ease,
+    color 0.8s ease;
 }
 
 .modal-open {
@@ -71,12 +129,6 @@ body {
   width: 100%;
   height: 100%;
   padding: 10px;
-}
-
-.modal__title {
-}
-
-.modal__paragraph {
 }
 
 .modal__close-button {
@@ -112,15 +164,16 @@ body {
   transform: translateX(-50%);
   width: 2px;
   height: 100%;
-  background: white;
+  background: var(--color-slider-line);
   pointer-events: none;
+  transition: background 0.8s ease;
 }
 
 #compare-slider__handle {
   position: absolute;
   top: 50%;
   transform: translateY(-50%);
-  background: white;
+  background: var(--color-slider-handle);
   border-radius: 50%;
   width: 40px;
   height: 40px;
@@ -130,17 +183,18 @@ body {
   font-size: 18px;
   pointer-events: none;
   user-select: none;
+  transition: background 0.8s ease;
 }
 
 /* Preloader */
 .preloader {
-  position: fixed;
+  position: absolute;
   inset: 0;
-  z-index: 9999;
-  background: #282828;
   display: flex;
   align-items: center;
   justify-content: center;
+  background: var(--color-preloader-bg);
+  transition: background 0.8s ease;
 }
 
 .preloader__inner {
@@ -153,43 +207,22 @@ body {
 .preloader__progress-wrapper {
   width: 450px;
   height: 10px;
-  background: #4e4e4e;
+  background: var(--color-progress-bg);
   border-radius: 50px;
+  transition: background 0.8s ease;
 }
 
 .preloader__progress-bar {
   height: 100%;
   width: 0%;
-  background: #ead83a;
+  background: var(--color-progress-bar);
   border-radius: 50px;
-  transition: width 0.3s ease;
+  transition:
+    width 0.3s ease,
+    background 0.8s ease;
 }
 
-.preloader--chad {
-  background: #282828; /* chad's dark vibe */
-}
-
-.preloader--capybara {
-  background: #f7bf76; /* capybara's blue sky */
-}
-
-.preloader__progress-bar--chad {
-  height: 100%;
-  width: 0%;
-  background: #ead83a;
-  border-radius: 50px;
-  transition: width 0.3s ease;
-}
-
-.preloader__progress-bar--capybara {
-  height: 100%;
-  width: 0%;
-  background: #ffffff;
-  border-radius: 50px;
-  transition: width 0.3s ease;
-}
-
-/* Theme Toggle Button  */
+/* Theme Toggle */
 .night-toggle {
   position: absolute;
   top: 24px;
