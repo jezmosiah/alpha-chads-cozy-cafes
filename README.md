@@ -11,6 +11,7 @@ This repo contains code of Alpha Chad's Cozy Cafe for a YouTube tutorial!! It's 
 - [Music - Let's Get it On](https://youtu.be/x6QZn9xiuOE?list=PLBNb2g4BA9pkiFIntZ-1cHxcEJmwpF8Ow)
 - [Music - Cartoon](https://youtu.be/isGaq0fvCCI?list=PLIivsWgptefLhwzNuArtmShioz8pUc3XL)
 - [Fonts - Blambot](https://blambot.com/)
+- [Bruno Simon's Course](https://threejs-journey.com/)
 
 # Extra info
 
