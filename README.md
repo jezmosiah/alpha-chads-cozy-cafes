@@ -1,4 +1,4 @@
-# 📄 Aimee Wei's Papercraft Portfolio World ✂️
+# 😎💪💪💪 ALPHA CHAD'S COZY CAFEZZZZZZ ☕☕☕
 
 **[Live site](https://alpha-chads-cozy-cafes.vercel.app/)** | **[Tutorial](https://youtu.be/AD01pTr3gvw)**
 
