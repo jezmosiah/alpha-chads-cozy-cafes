@@ -88,6 +88,11 @@ export class CapybaraCafe {
 
     this.experience.raycaster.populateIntersectObjects("B", [
       {
+        mesh: intersectObjects["Raycaster_music_trolls"],
+        type: "music",
+        pairKey: "musictrolls",
+      },
+      {
         mesh: intersectObjects["Raycaster_Capybara"],
         type: "scale",
         pairKey: "beast-mode",
@@ -105,15 +110,21 @@ export class CapybaraCafe {
         pairKey: "project-two",
       },
       {
+        mesh: intersectObjects["Raycaster_Freecodecamp"],
+        type: "url",
+        url: "https://www.freecodecamp.org/",
+        pairKey: "freecodecamp",
+      },
+      {
         mesh: intersectObjects["Raycaster_Instagram_Contact001"],
         type: "url",
-        url: "https://www.instagram.com/andrewwoan/",
+        url: "https://github.com/andrewwoan/alpha-chads-cozy-cafes",
         pairKey: "instagram",
       },
       {
         mesh: intersectObjects["Raycaster_Twitter_Link_Contact001"],
         type: "url",
-        url: "https://x.com/andrewwoan",
+        url: "https://github.com/andrewwoan/alpha-chads-cozy-cafes",
         pairKey: "twitter",
       },
       {
@@ -220,8 +231,8 @@ export class CapybaraCafe {
     this.experience.sceneB.add(this.sunLight);
     this.experience.sceneB.add(this.sunLight.target);
 
-    this.lightHelper = new THREE.DirectionalLightHelper(this.sunLight, 15);
-    this.experience.sceneB.add(this.lightHelper);
+    // this.lightHelper = new THREE.DirectionalLightHelper(this.sunLight, 15);
+    // this.experience.sceneB.add(this.lightHelper);
   }
 
   initDebug() {

@@ -3,6 +3,7 @@ import { Experience } from "../Experience";
 import { ChadCafe } from "./ChadCafe";
 import { CapybaraCafe } from "./CapybaraCafe";
 import { NightMode } from "./NightMode";
+import { Music } from "./Music";
 
 export class World {
   constructor() {
@@ -12,6 +13,17 @@ export class World {
       this.chadcafe = new ChadCafe();
       this.capybaracafe = new CapybaraCafe();
       this.nightMode = new NightMode();
+      this.music = new Music();
+
+      const musicA = this.experience.raycaster.intersectObjectsA.filter(
+        (o) => o.pairKey === "musictrolls",
+      );
+      const musicB = this.experience.raycaster.intersectObjectsB.filter(
+        (o) => o.pairKey === "musictrolls",
+      );
+      [...musicA, ...musicB].forEach((obj) => {
+        this.music.registerSpeaker(obj);
+      });
     });
 
     this.init();

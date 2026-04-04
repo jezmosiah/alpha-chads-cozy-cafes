@@ -24,6 +24,37 @@ body {
 }
 
 /* ================================
+   CORNER INFO (text + clock)
+================================ */
+.corner-info {
+  position: absolute;
+  top: 24px;
+  left: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  pointer-events: none;
+  z-index: 3;
+}
+
+.corner-info__text {
+  font-size: 14px;
+  color: var(--color-corner-text);
+  transition: color 0.8s ease;
+  line-height: 1.2;
+  font-weight: bold;
+}
+
+.corner-info__clock {
+  font-size: 12px;
+  color: var(--color-corner-text);
+  transition: color 0.8s ease;
+  opacity: 0.8;
+  line-height: 1.2;
+  font-weight: bold;
+}
+
+/* ================================
    THEME VARIABLES - CHAD
 ================================ */
 #ui-chad {
@@ -35,6 +66,7 @@ body {
   --color-preloader-bg: #282828;
   --color-progress-bg: #4e4e4e;
   --color-progress-bar: #ead83a;
+  --color-corner-text: #ffffff;
 }
 
 body.night-theme #ui-chad {
@@ -44,6 +76,7 @@ body.night-theme #ui-chad {
   --color-preloader-bg: #0a0f2e;
   --color-progress-bg: #1a2a4a;
   --color-progress-bar: #4a6fa5;
+  --color-corner-text: #a0b4d6;
 }
 
 /* ================================
@@ -57,6 +90,7 @@ body.night-theme #ui-chad {
   --color-preloader-bg: #f7bf76;
   --color-progress-bg: #e0a855;
   --color-progress-bar: #ffffff;
+  --color-corner-text: #000000;
 }
 
 body.night-theme #ui-capybara {
@@ -66,6 +100,7 @@ body.night-theme #ui-capybara {
   --color-preloader-bg: #0d1b2a;
   --color-progress-bg: #1a2a4a;
   --color-progress-bar: #2a4a8c;
+  --color-corner-text: #a0b4d6;
 }
 
 /* ================================
@@ -101,7 +136,7 @@ body.night-theme {
   left: 50%;
   transform: translate(-50%, -50%);
   width: 300px;
-  height: 200px;
+  height: 300px;
   z-index: 10000001;
   background-color: var(--color-modal-bg);
   color: var(--color-modal-text);
@@ -114,8 +149,18 @@ body.night-theme {
 }
 
 .modal__title {
-  font-size: 16px;
-  font-family: "BadaBoom BB";
+  font-size: 18px;
+  font-weight: bold;
+  text-align: start;
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  padding-top: 12px;
+  /* font-family: "BadaBoom BB"; */
+}
+
+.modal__paragraph {
+  font-size: 14px;
 }
 
 .modal-open {
@@ -124,20 +169,48 @@ body.night-theme {
 }
 
 .modal__wrapper {
+  position: relative;
   display: flex;
-  justify-content: center;
-  align-items: center;
+  justify-content: space-between;
+  align-items: start;
   flex-direction: column;
-  gap: 24px;
+  gap: 8px;
   width: 100%;
   height: 100%;
-  padding: 10px;
+  padding: 60px 40px;
+}
+
+.modal__border {
+  position: absolute;
+  inset: -4px;
+  width: calc(100% + 8px);
+  height: calc(100% + 8px);
+  pointer-events: none;
+  z-index: 0;
+}
+
+.modal__wrapper > *:not(.modal__border):not(.modal__close-button) {
+  position: relative;
+  z-index: 1;
 }
 
 .modal__close-button {
   position: absolute;
   left: 12px;
   top: 12px;
+  background: none;
+  border: none;
+  padding: 0;
+  color: var(--color-close-button);
+  transition: color 0.8s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.modal__close-button svg {
+  width: 24px;
+  height: 24px;
 }
 
 .modal__close-button:hover {
@@ -200,6 +273,7 @@ body.night-theme {
   justify-content: center;
   background: var(--color-preloader-bg);
   transition: background 0.8s ease;
+  z-index: 15;
 }
 
 .preloader__inner {
@@ -214,6 +288,7 @@ body.night-theme {
   height: 10px;
   background: var(--color-progress-bg);
   border-radius: 50px;
+  outline: 3px solid black;
   transition: background 0.8s ease;
 }
 

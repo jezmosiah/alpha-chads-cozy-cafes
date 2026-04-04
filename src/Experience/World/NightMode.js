@@ -20,13 +20,15 @@ export class NightMode {
         sunColor: "#ffffff",
         sunIntensity: 2.2,
         sunPosition: { x: 5, y: 18, z: -3 },
+        sunTarget: { x: 0, y: 0, z: 0 },
       },
       night: {
         ambientColor: "#6f7dd6",
         ambientIntensity: 1,
         sunColor: "#879df3",
         sunIntensity: 1,
-        sunPosition: { x: 5, y: 18, z: -3 },
+        sunPosition: { x: 6, y: 18, z: -4 },
+        sunTarget: { x: 0, y: 0, z: 0 },
       },
     };
 
@@ -37,13 +39,15 @@ export class NightMode {
         sunColor: "#ffffff",
         sunIntensity: 2.2,
         sunPosition: { x: 5, y: 18, z: -3 },
+        sunTarget: { x: 0, y: 0, z: 0 },
       },
       night: {
         ambientColor: "#8ca5db",
         ambientIntensity: 1,
         sunColor: "#778ce2",
         sunIntensity: 1,
-        sunPosition: { x: 5, y: 18, z: -3 },
+        sunPosition: { x: 6, y: 18, z: 3 },
+        sunTarget: { x: 7, y: 0, z: -9 },
       },
     };
 
@@ -82,6 +86,19 @@ export class NightMode {
 
   updateLighting(cafe, config) {
     const target = this.isNight ? config.night : config.day;
+
+    gsap.to(cafe.sunLight.target.position, {
+      x: target.sunTarget.x,
+      y: target.sunTarget.y,
+      z: target.sunTarget.z,
+      duration: 1.5,
+      ease: "power2.inOut",
+      onUpdate: () => {
+        cafe.sunLight.target.updateMatrixWorld();
+        cafe.sunLight.shadow.camera.updateProjectionMatrix();
+        if (cafe.lightHelper) cafe.lightHelper.update();
+      },
+    });
 
     gsap.to(cafe.ambientLight.color, {
       r: this.hexToRgb(target.ambientColor).r,

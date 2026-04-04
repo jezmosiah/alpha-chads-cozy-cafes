@@ -57,6 +57,10 @@ export class ChadCafe {
         intersectObjects[child.name] = child;
       }
 
+      if (child.name === "Raycaster_Freecodecamp001") {
+        this.freecodecamp = child;
+      }
+
       if (child.name === "arealight") {
         const worldPos = child.getWorldPosition(new THREE.Vector3());
 
@@ -239,9 +243,13 @@ export class ChadCafe {
     }));
 
     this.experience.sceneA.add(this.chadcafe);
-    console.log(intersectObjects);
 
     this.experience.raycaster.populateIntersectObjects("A", [
+      {
+        mesh: intersectObjects["Raycaster_music_trolls001"],
+        type: "music",
+        pairKey: "musictrolls",
+      },
       {
         mesh: intersectObjects["Raycaster_BEAST_MODE_ALPHA_CHAD"],
         type: "animation",
@@ -267,15 +275,21 @@ export class ChadCafe {
         pairKey: "project-two",
       },
       {
+        mesh: intersectObjects["Raycaster_Freecodecamp001"],
+        type: "url",
+        url: "https://www.freecodecamp.org/",
+        pairKey: "freecodecamp",
+      },
+      {
         mesh: intersectObjects["Raycaster_Instagram_Contact"],
         type: "url",
-        url: "https://www.instagram.com/andrewwoan/",
+        url: "https://github.com/andrewwoan/alpha-chads-cozy-cafes",
         pairKey: "instagram",
       },
       {
         mesh: intersectObjects["Raycaster_Twitter_Contact"],
         type: "url",
-        url: "https://x.com/andrewwoan",
+        url: "https://github.com/andrewwoan/alpha-chads-cozy-cafes",
         pairKey: "twitter",
       },
       {
@@ -459,8 +473,14 @@ export class ChadCafe {
   resize() {}
 
   update() {
+    if (this.freecodecamp) {
+      this.freecodecamp.rotation.y += 0.02;
+      this.freecodecamp.position.y =
+        1.1 + Math.sin(this.experience.time.elapsed * 2) * 0.1;
+    }
+
     if (this.mixer) {
-      this.mixer.update(this.experience.time.delta);
+      this.mixer.update(this.experience.time.delta * 4);
     }
 
     for (let i = 0; i < this.trailGroups.length; i++) {

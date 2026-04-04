@@ -18,6 +18,7 @@ export class Raycaster {
     this.meshesB = [];
 
     this.isModalOpen = false;
+    this.activeModalObjects = [];
 
     this.init();
   }
@@ -68,12 +69,16 @@ export class Raycaster {
 
       closeButton.addEventListener("click", (e) => {
         e.stopPropagation();
-        this.closeModal(object);
-        const paired = this.getPairedObject(object);
-        if (paired) this.closeModal(paired);
+        this.closeAllActiveModals();
       });
     });
   }
+
+  closeAllActiveModals() {
+    this.activeModalObjects.forEach((object) => this.closeModal(object));
+    this.activeModalObjects = [];
+  }
+
   closeModal(object) {
     const element = this.getElement(object);
     if (!element) return;
@@ -90,6 +95,7 @@ export class Raycaster {
   openModal(object) {
     const element = this.getElement(object);
     if (!element) return;
+    this.activeModalObjects.push(object);
     gsap.to(element, {
       opacity: 1,
       onStart: () => {
@@ -99,13 +105,21 @@ export class Raycaster {
     });
   }
 
+  canScaleObject(object) {
+    if (object.type === "music" && this.experience.world.music?.isPlaying) {
+      return false;
+    }
+    return true;
+  }
+
   scaleUp(object) {
     const multiplier = object.scaleMultiplier || 1.2;
     gsap.to(object.mesh.scale, {
       x: object.originalScale.x * multiplier,
       y: object.originalScale.y * multiplier,
       z: object.originalScale.z * multiplier,
-      duration: 0.4,
+      duration: 0.5,
+      ease: "back.out(2)",
     });
   }
 
@@ -114,8 +128,27 @@ export class Raycaster {
       x: object.originalScale.x,
       y: object.originalScale.y,
       z: object.originalScale.z,
-      duration: 0.4,
+      duration: 0.5,
+      ease: "back.out(2)",
     });
+  }
+
+  scaleUpGroup(object) {
+    if (!this.canScaleObject(object)) return;
+    this.scaleUp(object);
+    const paired = this.getPairedObject(object);
+    if (paired) this.scaleUp(paired);
+    const siblings = this.getSiblingObjects(object);
+    siblings.forEach((s) => this.scaleUp(s));
+  }
+
+  scaleDownGroup(object) {
+    if (!this.canScaleObject(object)) return;
+    this.scaleDown(object);
+    const paired = this.getPairedObject(object);
+    if (paired) this.scaleDown(paired);
+    const siblings = this.getSiblingObjects(object);
+    siblings.forEach((s) => this.scaleDown(s));
   }
 
   getIntersectResult() {
@@ -148,6 +181,13 @@ export class Raycaster {
     return sameList.filter((o) => o.pairKey === object.pairKey && o !== object);
   }
 
+  isClickInsideModal(e) {
+    return this.activeModalObjects.some((object) => {
+      const element = this.getElement(object);
+      return element && element.contains(e.target);
+    });
+  }
+
   init() {
     const handleClickAndTouch = (e) => {
       if (this.isModalOpen) return;
@@ -168,8 +208,23 @@ export class Raycaster {
           this.openModal(parentObject);
           if (paired) this.openModal(paired);
           break;
+        case "music":
+          this.experience.world.music.toggle();
+          break;
       }
     };
+
+    window.addEventListener("keydown", (e) => {
+      if (e.key === "Escape" && this.isModalOpen) {
+        this.closeAllActiveModals();
+      }
+    });
+
+    window.addEventListener("click", (e) => {
+      if (!this.isModalOpen) return;
+      if (this.isClickInsideModal(e)) return;
+      this.closeAllActiveModals();
+    });
 
     this.canvas.addEventListener("click", handleClickAndTouch);
     this.canvas.addEventListener("touchend", handleClickAndTouch);
@@ -179,9 +234,7 @@ export class Raycaster {
     if (this.isModalOpen) {
       if (this.hoveredObject) {
         document.body.style.cursor = "default";
-        this.scaleDown(this.hoveredObject);
-        const paired = this.getPairedObject(this.hoveredObject);
-        if (paired) this.scaleDown(paired);
+        this.scaleDownGroup(this.hoveredObject);
         this.hoveredObject = null;
       }
       return;
@@ -192,42 +245,34 @@ export class Raycaster {
 
     if (parentObject) {
       if (parentObject !== this.hoveredObject) {
+        // Unhover previous
         if (this.hoveredObject) {
-          this.scaleDown(this.hoveredObject);
-          const prevPaired = this.getPairedObject(this.hoveredObject);
-          if (prevPaired) this.scaleDown(prevPaired);
-          const prevSiblings = this.getSiblingObjects(this.hoveredObject);
-          prevSiblings.forEach((s) => this.scaleDown(s));
+          this.scaleDownGroup(this.hoveredObject);
 
           if (this.hoveredObject.type === "animation") {
             this.experience.world.chadcafe?.stopAnimation();
           }
         }
+
+        // Hover new
         document.body.style.cursor = "pointer";
         this.hoveredObject = parentObject;
-        this.scaleUp(parentObject);
-        const paired = this.getPairedObject(parentObject);
-        if (paired) this.scaleUp(paired);
-        const siblings = this.getSiblingObjects(parentObject);
-        siblings.forEach((s) => this.scaleUp(s));
+
+        this.scaleUpGroup(parentObject);
 
         if (parentObject.type === "animation") {
-          const ref = this.experience.world.chadcafe;
-          ref?.playAnimation();
+          this.experience.world.chadcafe?.playAnimation();
         }
       }
     } else {
       if (this.hoveredObject) {
         document.body.style.cursor = "default";
-        this.scaleDown(this.hoveredObject);
-        const paired = this.getPairedObject(this.hoveredObject);
-        if (paired) this.scaleDown(paired);
-        const siblings = this.getSiblingObjects(this.hoveredObject);
-        siblings.forEach((s) => this.scaleDown(s));
+        this.scaleDownGroup(this.hoveredObject);
 
         if (this.hoveredObject.type === "animation") {
           this.experience.world.chadcafe?.stopAnimation();
         }
+
         this.hoveredObject = null;
       }
     }
