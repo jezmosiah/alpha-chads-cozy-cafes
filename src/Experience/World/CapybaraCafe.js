@@ -31,6 +31,15 @@ export class CapybaraCafe {
         intersectObjects[child.name] = child;
       }
 
+      if (child.type === "Group") {
+        if (child.name.includes("Moon")) {
+          this.moon = child;
+        }
+        if (child.name.includes("Sun")) {
+          this.sun = child;
+        }
+      }
+
       if (child.isMesh) {
         child.castShadow = true;
         child.receiveShadow = true;
@@ -50,7 +59,7 @@ export class CapybaraCafe {
         pairKey: "beast-mode",
       },
       {
-        mesh: intersectObjects["Raycaster_Cozy_Project_1002"],
+        mesh: intersectObjects["Raycaster_Cozy_Scale_Project_1002"],
         type: "modal",
         elementId: "project-one-capybara",
         pairKey: "project-one",
@@ -68,7 +77,7 @@ export class CapybaraCafe {
         pairKey: "instagram",
       },
       {
-        mesh: intersectObjects["Raycaster_Twitter_Contact001"],
+        mesh: intersectObjects["Raycaster_Twitter_Link_Contact001"],
         type: "url",
         url: "https://x.com/andrewwoan",
         pairKey: "twitter",
@@ -83,20 +92,16 @@ export class CapybaraCafe {
   }
 
   setNightMode(isNight) {
-    return;
-    const sun = this.capybaracafe.getObjectByName("Sun");
-    const moon = this.capybaracafe.getObjectByName("Moon");
-
-    if (sun) {
-      gsap.to(sun.rotation, {
+    if (this.sun) {
+      gsap.to(this.sun.rotation, {
         x: isNight ? Math.PI : 0,
         duration: 1.5,
         ease: "power2.inOut",
       });
     }
 
-    if (moon) {
-      gsap.to(moon.rotation, {
+    if (this.moon) {
+      gsap.to(this.moon.rotation, {
         x: isNight ? Math.PI : 0,
         duration: 1.5,
         ease: "power2.inOut",
