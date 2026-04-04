@@ -222,18 +222,37 @@ export class ChadCafe {
       }
     });
 
+    const animations = this.experience.resources.items.chadcafe.animations;
+
+    if (animations && animations.length > 0) {
+      this.mixer = new THREE.AnimationMixer(this.chadcafe);
+      this.animationAction = this.mixer.clipAction(animations[0]);
+      this.animationAction.clampWhenFinished = true;
+      this.animationAction.loop = THREE.LoopOnce;
+      this.animationAction.play();
+      this.animationAction.paused = true;
+    }
+
     this.carOriginalPositions = this.carParts.map((part) => ({
       mesh: part,
       originalZ: part.position.z,
     }));
 
     this.experience.sceneA.add(this.chadcafe);
+    console.log(intersectObjects);
 
     this.experience.raycaster.populateIntersectObjects("A", [
       {
         mesh: intersectObjects["Raycaster_BEAST_MODE_ALPHA_CHAD"],
-        type: "scale",
-        pairKey: "beast-mode",
+        type: "animation",
+        pairKey: "chad",
+        scaleMultiplier: 1.02,
+      },
+      {
+        mesh: intersectObjects["Raycaster_BEAST_MODE_ALPHA_CHAD001"],
+        type: "animation",
+        pairKey: "chad",
+        scaleMultiplier: 1.02,
       },
       {
         mesh: intersectObjects["Raycaster_Cozy_Project_1001"],
@@ -409,9 +428,41 @@ export class ChadCafe {
       .name("Intensity");
   }
 
+  playAnimation() {
+    if (!this.animationAction) return;
+    this.animationAction.paused = false;
+    this.animationAction.timeScale = 1;
+    this.animationAction.clampWhenFinished = true;
+    this.animationAction.loop = THREE.LoopOnce;
+
+    if (this.animationAction.time >= this.animationAction.getClip().duration) {
+      this.animationAction.time = this.animationAction.getClip().duration;
+    }
+
+    this.animationAction.play();
+  }
+
+  stopAnimation() {
+    if (!this.animationAction) return;
+    this.animationAction.paused = false;
+    this.animationAction.timeScale = -1;
+    this.animationAction.clampWhenFinished = true;
+    this.animationAction.loop = THREE.LoopOnce;
+
+    if (this.animationAction.time <= 0) {
+      this.animationAction.time = 0;
+    }
+
+    this.animationAction.play();
+  }
+
   resize() {}
 
   update() {
+    if (this.mixer) {
+      this.mixer.update(this.experience.time.delta);
+    }
+
     for (let i = 0; i < this.trailGroups.length; i++) {
       const group = this.trailGroups[i];
       const shouldShow = this.experience.controls.progress <= group.threshold;

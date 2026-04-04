@@ -100,10 +100,11 @@ export class Raycaster {
   }
 
   scaleUp(object) {
+    const multiplier = object.scaleMultiplier || 1.2;
     gsap.to(object.mesh.scale, {
-      x: object.originalScale.x * 1.2,
-      y: object.originalScale.y * 1.2,
-      z: object.originalScale.z * 1.2,
+      x: object.originalScale.x * multiplier,
+      y: object.originalScale.y * multiplier,
+      z: object.originalScale.z * multiplier,
       duration: 0.4,
     });
   }
@@ -138,6 +139,13 @@ export class Raycaster {
       if (parent) return parent;
       object = object.parent;
     }
+  }
+
+  getSiblingObjects(object) {
+    if (!object.pairKey || object.pairKey === "none") return [];
+    const sameList =
+      object.scene === "A" ? this.intersectObjectsA : this.intersectObjectsB;
+    return sameList.filter((o) => o.pairKey === object.pairKey && o !== object);
   }
 
   init() {
@@ -188,12 +196,27 @@ export class Raycaster {
           this.scaleDown(this.hoveredObject);
           const prevPaired = this.getPairedObject(this.hoveredObject);
           if (prevPaired) this.scaleDown(prevPaired);
+          const prevSiblings = this.getSiblingObjects(this.hoveredObject);
+          prevSiblings.forEach((s) => this.scaleDown(s));
+
+          if (this.hoveredObject.type === "animation") {
+            this.experience.world.chadcafe?.stopAnimation();
+          }
         }
         document.body.style.cursor = "pointer";
         this.hoveredObject = parentObject;
         this.scaleUp(parentObject);
         const paired = this.getPairedObject(parentObject);
         if (paired) this.scaleUp(paired);
+        const siblings = this.getSiblingObjects(parentObject);
+        siblings.forEach((s) => this.scaleUp(s));
+
+        if (parentObject.type === "animation") {
+          const ref = this.experience.world.chadcafe;
+          console.log("ref:", ref);
+          console.log("has playAnimation:", typeof ref?.playAnimation);
+          ref?.playAnimation();
+        }
       }
     } else {
       if (this.hoveredObject) {
@@ -201,6 +224,12 @@ export class Raycaster {
         this.scaleDown(this.hoveredObject);
         const paired = this.getPairedObject(this.hoveredObject);
         if (paired) this.scaleDown(paired);
+        const siblings = this.getSiblingObjects(this.hoveredObject);
+        siblings.forEach((s) => this.scaleDown(s));
+
+        if (this.hoveredObject.type === "animation") {
+          this.experience.world.chadcafe?.stopAnimation();
+        }
         this.hoveredObject = null;
       }
     }
