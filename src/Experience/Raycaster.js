@@ -213,8 +213,6 @@ export class Raycaster {
 
         if (parentObject.type === "animation") {
           const ref = this.experience.world.chadcafe;
-          console.log("ref:", ref);
-          console.log("has playAnimation:", typeof ref?.playAnimation);
           ref?.playAnimation();
         }
       }
