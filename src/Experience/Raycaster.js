@@ -245,7 +245,6 @@ export class Raycaster {
 
     if (parentObject) {
       if (parentObject !== this.hoveredObject) {
-        // Unhover previous
         if (this.hoveredObject) {
           this.scaleDownGroup(this.hoveredObject);
 
@@ -254,7 +253,6 @@ export class Raycaster {
           }
         }
 
-        // Hover new
         document.body.style.cursor = "pointer";
         this.hoveredObject = parentObject;
 

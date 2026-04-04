@@ -32,7 +32,6 @@ export class CapybaraCafe {
       }
 
       if (child.name === "arealight001") {
-        console.log("FOUND");
         const worldPos = child.getWorldPosition(new THREE.Vector3());
 
         this.areaLight = new THREE.SpotLight(
@@ -203,10 +202,7 @@ export class CapybaraCafe {
     ];
 
     this.trails.forEach((trail) => {
-      console.log(trail.name);
-
       const index = parseInt(trail.name.split("Trail")[1]) - 1;
-      console.log(index);
 
       if (this.trailGroups[index]) {
         this.trailGroups[index].trails.push(trail);

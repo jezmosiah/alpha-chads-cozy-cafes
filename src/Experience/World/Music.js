@@ -79,22 +79,17 @@ export class Music {
     this.stopSpeakerBounce();
 
     this.speakerObjects.forEach((obj) => {
-      const base = obj.originalScale;
-      // Kill any active hover tweens on this mesh's scale first
       gsap.killTweensOf(obj.mesh.scale);
 
+      const base = obj.originalScale;
       const tween = gsap.fromTo(
         obj.mesh.scale,
-        {
-          x: base.x,
-          y: base.y,
-          z: base.z,
-        },
+        { x: base.x, y: base.y, z: base.z },
         {
           x: base.x * 1.05,
           y: base.y * 1.2,
           z: base.z * 1.05,
-          duration: 0.3,
+          duration: 0.275,
           ease: "power2.inOut",
           yoyo: true,
           repeat: -1,
@@ -110,13 +105,7 @@ export class Music {
 
     this.speakerObjects.forEach((obj) => {
       gsap.killTweensOf(obj.mesh.scale);
-      gsap.to(obj.mesh.scale, {
-        x: obj.originalScale.x,
-        y: obj.originalScale.y,
-        z: obj.originalScale.z,
-        duration: 0.3,
-        ease: "back.out(2)",
-      });
+      obj.mesh.scale.copy(obj.originalScale);
     });
   }
 
