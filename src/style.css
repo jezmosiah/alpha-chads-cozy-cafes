@@ -35,6 +35,7 @@ body {
   gap: 4px;
   pointer-events: none;
   z-index: 3;
+  user-select: none;
 }
 
 .corner-info__text {
